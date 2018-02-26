@@ -51,7 +51,7 @@ rte_spinlock_unlock (rte_spinlock_t *sl)
 			: "memory");
 }
 
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock (rte_spinlock_t *sl)
 {
 	int lockval = 1;
@@ -73,7 +73,7 @@ static inline int rte_tm_supported(void)
 	return rte_rtm_supported;
 }
 
-static inline int
+static inline int __rte_must_check
 rte_try_tm(volatile int *lock)
 {
 	if (!rte_rtm_supported)
@@ -113,7 +113,7 @@ rte_spinlock_lock_tm(rte_spinlock_t *sl)
 	rte_spinlock_lock(sl); /* fall-back */
 }
 
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock_tm(rte_spinlock_t *sl)
 {
 	if (likely(rte_try_tm(&sl->locked)))
@@ -149,7 +149,7 @@ rte_spinlock_recursive_unlock_tm(rte_spinlock_recursive_t *slr)
 		rte_xend();
 }
 
-static inline int
+static inline int __rte_must_check
 rte_spinlock_recursive_trylock_tm(rte_spinlock_recursive_t *slr)
 {
 	if (likely(rte_try_tm(&slr->sl.locked)))

@@ -59,7 +59,7 @@ rte_spinlock_unlock(rte_spinlock_t *sl)
 	__sync_lock_release(&sl->locked);
 }
 
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock(rte_spinlock_t *sl)
 {
 	return __sync_lock_test_and_set(&sl->locked, 1) == 0;
@@ -78,7 +78,7 @@ rte_spinlock_lock_tm(rte_spinlock_t *sl)
 	rte_spinlock_lock(sl); /* fall-back */
 }
 
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock_tm(rte_spinlock_t *sl)
 {
 	return rte_spinlock_trylock(sl);
@@ -102,7 +102,7 @@ rte_spinlock_recursive_unlock_tm(rte_spinlock_recursive_t *slr)
 	rte_spinlock_recursive_unlock(slr);
 }
 
-static inline int
+static inline int __rte_must_check
 rte_spinlock_recursive_trylock_tm(rte_spinlock_recursive_t *slr)
 {
 	return rte_spinlock_recursive_trylock(slr);

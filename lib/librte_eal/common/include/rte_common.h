@@ -43,6 +43,8 @@ extern "C" {
 #ifdef RTE_TOOLCHAIN_GCC
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 +	\
 		__GNUC_PATCHLEVEL__)
+#else
+#define GCC_VERSION 0
 #endif
 
 #ifdef RTE_ARCH_STRICT_ALIGN
@@ -113,6 +115,13 @@ static void __attribute__((constructor(prio), used)) func(void)
  * Force a function to be noinlined
  */
 #define __rte_noinline  __attribute__((noinline))
+
+
+#if GCC_VERSION >= 30400
+#define __rte_must_check	__attribute__((warn_unused_result))
+#else
+#define __rte_must_check
+#endif
 
 /*********** Macros for pointer arithmetic ********/
 

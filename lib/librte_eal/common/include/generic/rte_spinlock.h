@@ -92,11 +92,11 @@ rte_spinlock_unlock (rte_spinlock_t *sl)
  * @return
  *   1 if the lock is successfully taken; 0 otherwise.
  */
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock (rte_spinlock_t *sl);
 
 #ifdef RTE_FORCE_INTRINSICS
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock (rte_spinlock_t *sl)
 {
 	return __sync_lock_test_and_set(&sl->locked,1) == 0;
@@ -166,7 +166,7 @@ rte_spinlock_unlock_tm(rte_spinlock_t *sl);
  *   1 if the hardware memory transaction is successfully started
  *   or lock is successfully taken; 0 otherwise.
  */
-static inline int
+static inline int __rte_must_check
 rte_spinlock_trylock_tm(rte_spinlock_t *sl);
 
 /**
@@ -235,7 +235,8 @@ static inline void rte_spinlock_recursive_unlock(rte_spinlock_recursive_t *slr)
  * @return
  *   1 if the lock is successfully taken; 0 otherwise.
  */
-static inline int rte_spinlock_recursive_trylock(rte_spinlock_recursive_t *slr)
+static inline int __rte_must_check
+rte_spinlock_recursive_trylock(rte_spinlock_recursive_t *slr)
 {
 	int id = rte_gettid();
 
@@ -291,7 +292,7 @@ static inline void rte_spinlock_recursive_unlock_tm(
  *   1 if the hardware memory transaction is successfully started
  *   or lock is successfully taken; 0 otherwise.
  */
-static inline int rte_spinlock_recursive_trylock_tm(
-	rte_spinlock_recursive_t *slr);
+static inline int __rte_must_check
+rte_spinlock_recursive_trylock_tm(rte_spinlock_recursive_t *slr);
 
 #endif /* _RTE_SPINLOCK_H_ */
