@@ -292,18 +292,6 @@ static const struct enic_action_cap enic_action_cap[] = {
 	},
 };
 
-static int
-mask_exact_match(const u8 *supported, const u8 *supplied,
-		 unsigned int size)
-{
-	unsigned int i;
-	for (i = 0; i < size; i++) {
-		if (supported[i] != supplied[i])
-			return 0;
-	}
-	return 1;
-}
-
 /**
  * Copy IPv4 item into version 1 NIC filter.
  *
@@ -341,8 +329,8 @@ enic_copy_item_ipv4_v1(const struct rte_flow_item *item,
 	}
 
 	/* check that the suppied mask exactly matches capabilty */
-	if (!mask_exact_match((const u8 *)&supported_mask,
-			      (const u8 *)item->mask, sizeof(*mask))) {
+	if (!memcpy(&supported_mask,
+		    &mask->hdr, sizeof(supported_mask))) {
 		FLOW_LOG(ERR, "IPv4 exact match mask");
 		return ENOTSUP;
 	}
@@ -391,8 +379,8 @@ enic_copy_item_udp_v1(const struct rte_flow_item *item,
 	}
 
 	/* check that the suppied mask exactly matches capabilty */
-	if (!mask_exact_match((const u8 *)&supported_mask,
-			      (const u8 *)item->mask, sizeof(*mask))) {
+	if (!memcpy(&supported_mask,
+		    &mask->hdr, sizeof(supported_mask))) {
 		FLOW_LOG(ERR, "UDP exact match mask");
 		return ENOTSUP;
 	}
@@ -442,8 +430,8 @@ enic_copy_item_tcp_v1(const struct rte_flow_item *item,
 	}
 
 	/* check that the suppied mask exactly matches capabilty */
-	if (!mask_exact_match((const u8 *)&supported_mask,
-			     (const u8 *)item->mask, sizeof(*mask))) {
+	if (!memcpy(&supported_mask,
+		    &mask->hdr, sizeof(supported_mask))) {
 		FLOW_LOG(ERR, "TCP exact match mask");
 		return ENOTSUP;
 	}
