@@ -1138,7 +1138,7 @@ rte_lpm_add_v20(struct rte_lpm_v20 *lpm, uint32_t ip, uint8_t depth,
 		}
 	}
 
-	return 0;
+	return status;
 }
 VERSION_SYMBOL(rte_lpm_add, _v20, 2.0);
 
@@ -1179,7 +1179,7 @@ rte_lpm_add_v1604(struct rte_lpm *lpm, uint32_t ip, uint8_t depth,
 		}
 	}
 
-	return 0;
+	return status;
 }
 BIND_DEFAULT_SYMBOL(rte_lpm_add, _v1604, 16.04);
 MAP_STATIC_SYMBOL(int rte_lpm_add(struct rte_lpm *lpm, uint32_t ip,
