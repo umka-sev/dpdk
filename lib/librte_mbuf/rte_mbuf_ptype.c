@@ -110,6 +110,22 @@ const char *rte_get_ptype_inner_l4_name(uint32_t ptype)
 	}
 }
 
+static inline int
+rte_buffer_add(char **pbuf, size_t *pbuflen, const char *str)
+{
+	int ret;
+
+	ret = snprintf(*pbuf, *pbuflen, "%s ", str);
+	if (ret < 0)
+		return -1;
+	if ((size_t)ret >= *pbuflen)
+		return -1;
+	*pbuf += ret;
+	*pbuflen -= ret;
+
+	return 0;
+}
+
 /* write the packet type name into the buffer */
 int rte_get_ptype_name(uint32_t ptype, char *buf, size_t buflen)
 {
@@ -129,74 +145,39 @@ int rte_get_ptype_name(uint32_t ptype, char *buf, size_t buflen)
 	}
 
 	if ((ptype & RTE_PTYPE_L2_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_l2_name(ptype));
-		if (ret < 0)
-			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_l2_name(ptype)) != 0))
+		    return -1;
 	}
 	if ((ptype & RTE_PTYPE_L3_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_l3_name(ptype));
-		if (ret < 0)
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_l3_name(ptype)) != 0))
 			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
 	}
 	if ((ptype & RTE_PTYPE_L4_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_l4_name(ptype));
-		if (ret < 0)
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_l4_name(ptype)) != 0))
 			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
 	}
 	if ((ptype & RTE_PTYPE_TUNNEL_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_tunnel_name(ptype));
-		if (ret < 0)
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_l4_name(ptype)) != 0))
 			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
 	}
 	if ((ptype & RTE_PTYPE_INNER_L2_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_inner_l2_name(ptype));
-		if (ret < 0)
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_inner_l2_name(ptype)) != 0))
 			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
 	}
 	if ((ptype & RTE_PTYPE_INNER_L3_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_inner_l3_name(ptype));
-		if (ret < 0)
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_inner_l3_name(ptype)) != 0))
 			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
 	}
 	if ((ptype & RTE_PTYPE_INNER_L4_MASK) != 0) {
-		ret = snprintf(buf, buflen, "%s ",
-			rte_get_ptype_inner_l4_name(ptype));
-		if (ret < 0)
+		if (unlikely(rte_buffer_add(&buf, &buflen,
+			     rte_get_ptype_inner_l4_name(ptype)) != 0))
 			return -1;
-		if ((size_t)ret >= buflen)
-			return -1;
-		buf += ret;
-		buflen -= ret;
 	}
 
 	return 0;
